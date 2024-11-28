@@ -118,7 +118,7 @@ CREATE TABLE publicaciones (
 -- contraseña a ingresar en el login: "password123" para los tres usuarios
 INSERT INTO usuarios (id_usuario, nombre, apellido, email, telefono, password, rol) VALUES (DEFAULT, 'juan', 'perez', 'admin1@example.com', '1234567890', '$2a$10$brMjQTyiKsRz3gPyZdjJsepKn2hF4Es70FoFg36DbxGHN7ZzogUr6', 'admin');
 INSERT INTO usuarios (id_usuario, nombre, apellido, email, telefono, password, rol) VALUES (DEFAULT, 'ana', 'gomez', 'admin2@example.com', '0987654321', '$2a$10$brMjQTyiKsRz3gPyZdjJsepKn2hF4Es70FoFg36DbxGHN7ZzogUr6', 'admin'),
-INSERT INTO usuarios (id_usuario, nombre, apellido, email, telefono, password, rol) VALUES (DEFAULT, 'maria', 'lopez', 'cliente1@example.com', '1122334455', '$2a$10$brMjQTyiKsRz3gPyZdjJsepKn2hF4Es70FoFg36DbxGHN7ZzogUr6', 'cliente');
+INSERT INTO usuarios (id_usuario, nombre, apellido, email, telefono, password, rol) VALUES (DEFAULT, 'maria', 'lopez', 'cliente1@example.com', '1122334455', '$2a$10$I8B.uHHNCZVhi/UXTX6cs.l5ZlDx9fBQLhOk4vBR3RHMSYCjkQOc.', 'cliente');
 
 -- SELECT * FROM usuarios;
 
@@ -193,7 +193,7 @@ INSERT INTO productos_sale (id_producto, descuento, estado) VALUES (4, 5, 'activ
 
 -- Producto con descuento en la categoría 'Sacos & Colchonetas'
 INSERT INTO productos_sale (id_producto, descuento, estado) VALUES (5, 0, 'inactivo'); 
-INSERT INTO productos_sale (id_producto, descuento, estado) VALUES (6, 0, 'inactivo'); 
+INSERT INTO productos_sale (id_producto, descuento, estado) VALUES (6, 0, 'activo'); 
 
 -- Producto con descuento en la categoría 'Accesorios'
 INSERT INTO productos_sale (id_producto, descuento, estado) VALUES (7, 0, 'inactivo'); 
