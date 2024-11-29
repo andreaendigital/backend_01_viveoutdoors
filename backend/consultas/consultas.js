@@ -69,6 +69,16 @@ const insertarProductosCategorias = async (id_producto, id_categoria) => {
 };
 
 //-------------------------------------------------------------------------------------------
+// FUNCIÓN PARA INSERTAR UN PRODUCTO A TABLA SALE 
+
+const insertarProductosSale = async (id_producto) => {
+  const consulta = `INSERT INTO productos_sale (id_producto, descuento, estado) VALUES ($1, 0, DEFAULT) RETURNING *;`;
+  const values = [id_producto];
+  const result = await pool.query(consulta, values);
+  return result.rows[0]; 
+};
+
+//-------------------------------------------------------------------------------------------
 // FUNCIÓN PARA TRAER PRODUCTO
 const getProductos = async () => {
   const { rows: productos } = await pool.query("SELECT * FROM productos");
@@ -78,12 +88,7 @@ const getProductos = async () => {
 //-------------------------------------------------------------------------------------------
 // FUNCIÓN PARA TRAER PRODUCTO POR ID (Tengo dudas con esta función)
 const getProductoById = async (id_producto) => {
-  const { rows } = await pool.query(
-    `SELECT p.id_producto, p.nombre, p.descripcion AS descripcion, p.precio, 
-              i.url AS foto
-       FROM productos p
-       LEFT JOIN imagenes_productos i ON p.id_producto = i.id_producto
-       WHERE p.id_producto = $1 LIMIT 1`,
+  const { rows } = await pool.query(    `SELECT p.id_producto, p.nombre, p.descripcion AS descripcion, p.precio,   i.url AS foto  FROM productos p        LEFT JOIN imagenes_productos i ON p.id_producto = i.id_producto        WHERE p.id_producto = $1 LIMIT 1`,
     [id_producto]
   );
   if (rows.length === 0) {
@@ -115,7 +120,7 @@ const getProductosSale = async () => {
 const publicacionInactiva = async (id_publicacion) => {
   const consulta =
     "UPDATE publicaciones SET estado = $1, fecha_actualizacion = NOW() WHERE id_publicacion = $2 RETURNING *;";
-  const values = ["Inactivo", id_publicacion];
+  const values = ["inactivo", id_publicacion];
   const result = await pool.query(consulta, values);
   return result.rows[0]; // Retorna la publicación actualizada
 };
@@ -125,7 +130,7 @@ const publicacionInactiva = async (id_publicacion) => {
 const publicacionActiva = async (id_publicacion) => {
   const consulta =
     "UPDATE publicaciones SET estado = $1, fecha_actualizacion = NOW() WHERE id_publicacion = $2 RETURNING *;";
-  const values = ["Activo", id_publicacion];
+  const values = ["activo", id_publicacion];
   const result = await pool.query(consulta, values);
   return result.rows[0]; // Retorna la publicación actualizada
 };
@@ -170,8 +175,7 @@ const cambiarDatosPersonales = async ( datos) => {
 //-------------------------------------------------------------------------------------------
 // FUNCIÓN PARA OBTENER DATOS DEL PEDIDO / VENTA
 const obtenerVentas = async () => {
-  const consulta = `SELECT p.id_pedido AS n_pedido, u.nombre AS Nombre, u.apellido AS Apellido,    p.fecha_pedido AS Fecha_Pedido,    p.total AS Total,     u.telefono AS Teléfono,    u.email AS Email,    d.direccion AS Dirección,    d.ciudad AS Ciudad FROM pedidos p JOIN  usuarios u ON p.id_usuario = u.id_usuario LEFT JOIN (
-SELECT DISTINCT ON (id_usuario) * FROM direcciones ORDER BY id_usuario, id_direccion) d ON u.id_usuario = d.id_usuario ORDER BY    p.id_pedido;`;
+  const consulta = `SELECT p.id_pedido AS n_pedido, u.nombre AS Nombre, u.apellido AS Apellido,    p.fecha_pedido AS Fecha_Pedido,    p.total AS Total,     u.telefono AS Teléfono,    u.email AS Email,    d.direccion AS Dirección,    d.ciudad AS Ciudad FROM pedidos p JOIN  usuarios u ON p.id_usuario = u.id_usuario LEFT JOIN ( SELECT DISTINCT ON (id_usuario) * FROM direcciones ORDER BY id_usuario, id_direccion) d ON u.id_usuario = d.id_usuario ORDER BY    p.id_pedido;`;
 
   try {
     const { rows } = await pool.query(consulta);
@@ -201,31 +205,7 @@ const obtenerTienda = async () => {
 //-------------------------------------------------------------------------------------------
 // FUNCIÓN PARA OBTENER UN PRODUCTO POR CATEGORIA EN LA SECCIÓN DEL HOME
 const obtenerCategoriasHome = async () => {
-  const consulta = `
-  SELECT 
-    p.id_producto,
-    p.nombre AS producto_nombre,
-    p.precio,
-    img.url AS imagen_url,
-    cat.nombre AS categoria_nombre
-FROM 
-    productos p
-JOIN 
-    productos_categorias pc ON p.id_producto = pc.id_producto
-JOIN 
-    categorias cat ON pc.id_categoria = cat.id_categoria
-LEFT JOIN 
-    (SELECT DISTINCT ON (id_producto) id_producto, url
-     FROM imagenes_productos
-     ORDER BY id_producto, id_imagen) img ON p.id_producto = img.id_producto
-WHERE 
-    p.id_producto IN (
-        SELECT MIN(p.id_producto)
-        FROM productos p
-        JOIN productos_categorias pc ON p.id_producto = pc.id_producto
-        GROUP BY pc.id_categoria
-    )
-LIMIT 4; `;
+  const consulta = `   SELECT     p.id_producto,    p.nombre AS producto_nombre,    p.precio,    img.url AS imagen_url,    cat.nombre AS categoria_nombre FROM     productos p JOIN     productos_categorias pc ON p.id_producto = pc.id_producto JOIN     categorias cat ON pc.id_categoria = cat.id_categoria LEFT JOIN     (SELECT DISTINCT ON (id_producto) id_producto, url     FROM imagenes_productos     ORDER BY id_producto, id_imagen) img ON p.id_producto = img.id_producto WHERE      p.id_producto IN (         SELECT MIN(p.id_producto)         FROM productos p         JOIN productos_categorias pc ON p.id_producto = pc.id_producto         GROUP BY pc.id_categoria  ) LIMIT 4; `;
 
   try {
     const resultados = await pool.query(consulta);
@@ -241,32 +221,7 @@ LIMIT 4; `;
 //-------------------------------------------------------------------------------------------
 // FUNCIÓN PARA OBTENER 4 PRODUCTO SALE EN DESCUETO PARA LA SECCIÓN DEL HOME
 const obtenerSalesHome = async () => {
-  const consulta = `
-SELECT 
-    p.id_producto,
-    p.nombre AS producto_nombre,
-    p.precio,
-    img.url AS imagen_url,
-    ps.estado AS producto_estado,
-    cat.nombre AS categoria_nombre
-    
-FROM 
-    productos p
-JOIN 
-    productos_sale ps ON p.id_producto = ps.id_producto
-JOIN 
-    productos_categorias pc ON p.id_producto = pc.id_producto
-JOIN 
-    categorias cat ON pc.id_categoria = cat.id_categoria
-LEFT JOIN 
-    (SELECT DISTINCT ON (id_producto) id_producto, url
-     FROM imagenes_productos
-     ORDER BY id_producto, id_imagen) img ON p.id_producto = img.id_producto
-WHERE 
-    ps.estado = 'activo'
-LIMIT 4;
-
- `;
+  const consulta = ` SELECT    p.id_producto,    p.nombre AS producto_nombre,    p.precio,    img.url AS imagen_url,    ps.estado AS producto_estado,    cat.nombre AS categoria_nombre    FROM     productos p JOIN     productos_sale ps ON p.id_producto = ps.id_producto JOIN     productos_categorias pc ON p.id_producto = pc.id_producto JOIN      categorias cat ON pc.id_categoria = cat.id_categoria LEFT JOIN     (SELECT DISTINCT ON (id_producto) id_producto, url      FROM imagenes_productos      ORDER BY id_producto, id_imagen) img ON p.id_producto = img.id_producto WHERE      ps.estado = 'activo' LIMIT 4;`;
 
   try {
     const resultados = await pool.query(consulta);
@@ -299,7 +254,8 @@ module.exports = {
   obtenerTienda,
   cambiarDatosPersonales,
   obtenerCategoriasHome,
-  obtenerSalesHome
+  obtenerSalesHome,
+  insertarProductosSale
 };
 
 //-------------------------------------------------------------------------------------------
