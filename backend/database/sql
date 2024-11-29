@@ -10,8 +10,8 @@ CREATE TABLE usuarios (
     nombre VARCHAR(50) NOT NULL, 
     apellido VARCHAR(50) NOT NULL, 
     email VARCHAR(100) UNIQUE NOT NULL, 
-    telefono VARCHAR(15) UNIQUE NOT NULL, 
-    password VARCHAR(15) NOT NULL, 
+    telefono VARCHAR(255) UNIQUE NOT NULL, 
+    password VARCHAR(255) NOT NULL, 
     rol VARCHAR(7) CHECK (rol IN ('admin', 'cliente')) DEFAULT 'cliente' 
 );
 
@@ -117,7 +117,7 @@ CREATE TABLE publicaciones (
 
 -- contraseña a ingresar en el login: "password123" para los tres usuarios
 INSERT INTO usuarios (id_usuario, nombre, apellido, email, telefono, password, rol) VALUES (DEFAULT, 'juan', 'perez', 'admin1@example.com', '1234567890', '$2a$10$brMjQTyiKsRz3gPyZdjJsepKn2hF4Es70FoFg36DbxGHN7ZzogUr6', 'admin');
-INSERT INTO usuarios (id_usuario, nombre, apellido, email, telefono, password, rol) VALUES (DEFAULT, 'ana', 'gomez', 'admin2@example.com', '0987654321', '$2a$10$brMjQTyiKsRz3gPyZdjJsepKn2hF4Es70FoFg36DbxGHN7ZzogUr6', 'admin'),
+INSERT INTO usuarios (id_usuario, nombre, apellido, email, telefono, password, rol) VALUES (DEFAULT, 'ana', 'gomez', 'admin2@example.com', '0987654321', '$2a$10$brMjQTyiKsRz3gPyZdjJsepKn2hF4Es70FoFg36DbxGHN7ZzogUr6', 'admin');
 INSERT INTO usuarios (id_usuario, nombre, apellido, email, telefono, password, rol) VALUES (DEFAULT, 'maria', 'lopez', 'cliente1@example.com', '1122334455', '$2a$10$I8B.uHHNCZVhi/UXTX6cs.l5ZlDx9fBQLhOk4vBR3RHMSYCjkQOc.', 'cliente');
 
 -- SELECT * FROM usuarios;
@@ -144,20 +144,20 @@ INSERT INTO categorias (id_categoria, nombre) VALUES (DEFAULT, 'Carpas'), (DEFAU
 -- Tabla productos:  2 productos para cada categoría
 
 -- Productos para categoría 'Carpas'
-INSERT INTO productos (id_producto, nombre, descripción, stock, precio) VALUES (DEFAULT, 'Carpa Everest', 'Carpa de alta montaña', 10, 200000);
-INSERT INTO productos (id_producto, nombre, descripción, stock, precio) VALUES (DEFAULT, 'Carpa Igloo', 'Carpa para 4 personas', 15, 120000);
+INSERT INTO productos (id_producto, nombre, descripcion, stock, precio) VALUES (DEFAULT, 'Carpa Everest', 'Carpa de alta montaña', 10, 200000);
+INSERT INTO productos (id_producto, nombre, descripcion, stock, precio) VALUES (DEFAULT, 'Carpa Igloo', 'Carpa para 4 personas', 15, 120000);
 
 -- Productos para categoría 'Mochilas'
-INSERT INTO productos (id_producto, nombre, descripción, stock, precio) VALUES (DEFAULT, 'Mochila Montañista', 'Mochila de 70 litros', 20, 40000);
-INSERT INTO productos (id_producto, nombre, descripción, stock, precio) VALUES (DEFAULT, 'Mochila Trekking', 'Mochila ligera de 30 litros', 30, 30000);
+INSERT INTO productos (id_producto, nombre, descripcion, stock, precio) VALUES (DEFAULT, 'Mochila Montañista', 'Mochila de 70 litros', 20, 40000);
+INSERT INTO productos (id_producto, nombre, descripcion, stock, precio) VALUES (DEFAULT, 'Mochila Trekking', 'Mochila ligera de 30 litros', 30, 30000);
 
 -- Productos para categoría 'Sacos & Colchonetas'
-INSERT INTO productos (id_producto, nombre, descripción, stock, precio) VALUES (DEFAULT, 'Saco de Dormir Invierno', 'Saco térmico para bajas temperaturas', 25, 60000);
-INSERT INTO productos (id_producto, nombre, descripción, stock, precio) VALUES (DEFAULT, 'Colchoneta Autoinflable', 'Colchoneta para camping', 20, 30000);
+INSERT INTO productos (id_producto, nombre, descripcion, stock, precio) VALUES (DEFAULT, 'Saco de Dormir Invierno', 'Saco térmico para bajas temperaturas', 25, 60000);
+INSERT INTO productos (id_producto, nombre, descripcion, stock, precio) VALUES (DEFAULT, 'Colchoneta Autoinflable', 'Colchoneta para camping', 20, 30000);
 
 -- Productos para categoría 'Accesorios'
-INSERT INTO productos (id_producto, nombre, descripción, stock, precio) VALUES (DEFAULT, 'Linterna LED', 'Linterna resistente al agua', 50, 15000);
-INSERT INTO productos (id_producto, nombre, descripción, stock, precio) VALUES (DEFAULT, 'Filtro de Agua Portátil', 'Filtro compacto para purificar agua', 40, 25000);
+INSERT INTO productos (id_producto, nombre, descripcion, stock, precio) VALUES (DEFAULT, 'Linterna LED', 'Linterna resistente al agua', 50, 15000);
+INSERT INTO productos (id_producto, nombre, descripcion, stock, precio) VALUES (DEFAULT, 'Filtro de Agua Portátil', 'Filtro compacto para purificar agua', 40, 25000);
 
 -- SELECT * FROM productos;
 
